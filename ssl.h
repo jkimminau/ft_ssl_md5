@@ -6,7 +6,7 @@
 /*   By: jkimmina <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/09 14:18:41 by jkimmina          #+#    #+#             */
-/*   Updated: 2018/08/09 14:23:13 by jkimmina         ###   ########.fr       */
+/*   Updated: 2018/08/10 16:12:32 by jkimmina         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,6 @@
 # include "./libft/libft.h"
 # include "./libft/printf/ft_printf.h"
 
-void		md5(char *input);
+int		md5(char *input);
 
 #endif

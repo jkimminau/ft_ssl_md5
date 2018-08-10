@@ -6,49 +6,60 @@
 /*   By: jkimmina <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/09 14:19:52 by jkimmina          #+#    #+#             */
-/*   Updated: 2018/08/09 15:04:21 by jkimmina         ###   ########.fr       */
+/*   Updated: 2018/08/10 16:43:27 by jkimmina         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ssl.h>
 
-void	init(int (*s)[64], int (*K)[64])
-{
-	int		i;
-	
-	(void)K;
-	i = 0;
-	while (i < 16)
-	{
-		(*s)[i] = 7;
-		(*s)[i + 1] = 12;
-		(*s)[i + 2] = 17;
-		(*s)[i + 3] = 22;
-		(*s)[i + 16] = 5;
-		(*s)[i + 17] = 9;
-		(*s)[i + 18] = 14;
-		(*s)[i + 19] = 20;
-		(*s)[i + 32] = 4;
-		(*s)[i + 33] = 11;
-		(*s)[i + 34] = 16;
-		(*s)[i + 35] = 23;
-		(*s)[i + 48] = 6;
-		(*s)[i + 49] = 10;
-		(*s)[i + 50] = 15;
-		(*s)[i + 51] = 21;
-		i += 4;
-	}
-	i = 0;
-	while (i < 64)
-		(*K)[i] = ft_pow(2, 32);
-}
+const uint32_t s[] = {
+	7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,
+	5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20,
+	4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23,
+	6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21};
 
-void	md5(char *input)
-{
-	//int		i;
-	int		s[64];
-	int		K[64];
+const uint32_t K[] = {
+	0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
+	0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
+	0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be,
+	0x6b901122, 0xfd987193, 0xa679438e, 0x49b40821,
+	0xf61e2562, 0xc040b340, 0x265e5a51, 0xe9b6c7aa,
+	0xd62f105d, 0x02441453, 0xd8a1e681, 0xe7d3fbc8,
+	0x21e1cde6, 0xc33707d6, 0xf4d50d87, 0x455a14ed,
+	0xa9e3e905, 0xfcefa3f8, 0x676f02d9, 0x8d2a4c8a,
+	0xfffa3942, 0x8771f681, 0x6d9d6122, 0xfde5380c,
+	0xa4beea44, 0x4bdecfa9, 0xf6bb4b60, 0xbebfbc70,
+	0x289b7ec6, 0xeaa127fa, 0xd4ef3085, 0x04881d05,
+	0xd9d4d039, 0xe6db99e5, 0x1fa27cf8, 0xc4ac5665,
+	0xf4292244, 0x432aff97, 0xab9423a7, 0xfc93a039,
+	0x655b59c3, 0x8f0ccc92, 0xffeff47d, 0x85845dd1,
+	0x6fa87e4f, 0xfe2ce6e0, 0xa3014314, 0x4e0811a1,
+	0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391};
 
-	init(&s, &K);
-	ft_printf("creating hash for '%s'\n", input);
+int		md5(char *input)
+{
+	int			len;
+	uint32_t	abcd[4];
+	char		*m;
+
+	abcd[0] = 0x67452301;
+	abcd[1] = 0xefcdab89;
+	abcd[2] = 0x98badcfe;
+	abcd[3] = 0x10325476;
+	len = ft_strlen(input) + 1;
+	while (len % 64 != 56)
+		len++;
+	if (!(m = (char *)malloc(len + 64)))
+		return (-1);
+	ft_bzero(m, len);
+	ft_strcpy(m, input);
+	*(uint32_t *)(m + ft_strlen(input)) = 0x80;
+	*(uint32_t *)(m + len) = (uint32_t)(ft_strlen(input) * 8);
+	ft_printf("m = '");
+	int i = 0;
+	while (i < len + 64)
+		ft_printf("%c", m[i++]);
+	ft_printf("\n");
+	free(m);
+	return (0);
 }
